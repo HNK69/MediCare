@@ -1,0 +1,69 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Medicare Hub — My Profile</title>
+  <link rel="stylesheet" href="{% static 'css/style.css' %}">
+  <style>
+    .profile-wrap { max-width:600px; margin:30px auto; padding:0 18px; }
+    h1 { font-size:22px; color:var(--accent-deep); margin-bottom:20px; }
+    form { background:var(--card-bg); padding:20px; border-radius:12px; box-shadow:var(--shadow); }
+    label { display:block; margin:10px 0 4px; font-weight:600; color:#0b3440; }
+    input, select, textarea {
+      width:100%; padding:10px; border-radius:8px; border:1px solid #dde7eb; font-size:14px;
+    }
+    button { margin-top:16px; padding:10px 14px; border-radius:8px; border:none; cursor:pointer; font-weight:700; }
+    .btn-primary { background:var(--accent-deep); color:#fff; }
+    .btn-secondary { background:#fff; border:1px solid rgba(0,0,0,0.1); color:#444; margin-left:10px; }
+  </style>
+</head>
+<body>
+  <header class="site-header">
+    <div class="site-brand">
+      <span class="brand-name">Medicare Hub</span>
+    </div>
+  </header>
+
+  <main class="profile-wrap">
+    <h1>My Profile</h1>
+
+    <form method="post" action="{% url 'patient_profile' %}">
+      {% csrf_token %}
+      
+      <label for="full_name">Full Name</label>
+      <input type="text" id="full_name" name="full_name" value="{{ patient.full_name }}" required>
+
+      <label for="email">Email</label>
+      <input type="email" id="email" name="email" value="{{ patient.email }}" required>
+
+      <label for="phone">Phone</label>
+      <input type="text" id="phone" name="phone" value="{{ patient.phone|default:'' }}">
+
+      <label for="dob">Date of Birth</label>
+      <input type="date" id="dob" name="dob" value="{{ patient.dob|date:'Y-m-d' }}">
+
+      <label for="gender">Gender</label>
+      <select id="gender" name="gender">
+        <option value="">-- Select --</option>
+        <option value="male" {% if patient.gender == "male" %}selected{% endif %}>Male</option>
+        <option value="female" {% if patient.gender == "female" %}selected{% endif %}>Female</option>
+        <option value="other" {% if patient.gender == "other" %}selected{% endif %}>Other</option>
+      </select>
+
+      <label for="address">Address</label>
+      <textarea id="address" name="address">{{ patient.address }}</textarea>
+
+      <div style="margin-top:20px;">
+        <button type="submit" class="btn-primary">Save Changes</button>
+        <a href="{% url 'patient_dashboard' %}" class="btn-secondary">Cancel</a>
+      </div>
+    </form>
+  </main>
+
+  <footer class="site-footer">
+    <small>© <span id="year">2025</span> Medicare Hub — Secure medical appointments</small>
+  </footer>
+</body>
+</html>

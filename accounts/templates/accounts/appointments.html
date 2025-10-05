@@ -1,0 +1,204 @@
+<!-- File: templates/appointment.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Medicare Hub — My Appointments</title>
+
+  <!-- Shared theme CSS -->
+  <link rel="stylesheet" href="/static/css/style.css">
+
+  <style>
+    :root {
+      --card-gap: 22px;
+    }
+
+    body {
+      font-family: 'Segoe UI', Arial, sans-serif;
+    }
+
+    .page-wrap {
+      max-width: var(--max-width);
+      margin: 18px auto;
+      padding: 0 18px 36px;
+    }
+
+    .page-header {
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      gap:12px;
+      margin-bottom:12px;
+    }
+
+    .search-row {
+      display:flex;
+      gap:10px;
+      margin-bottom:12px;
+      flex-wrap:wrap;
+    }
+
+    .search-row input[type="search"],
+    .search-row select {
+      padding:10px 12px;
+      border-radius:10px;
+      border:1px solid #e6eef0;
+      background:#fff;
+      font-size:14px;
+    }
+
+    .card {
+      padding:20px;
+      border-radius:12px;
+      box-shadow: var(--shadow);
+      background: linear-gradient(180deg,#fff,#fbfeff);
+    }
+
+    .table { width:100%; border-collapse:collapse; }
+    .table thead th { text-align:left; padding:12px 10px; font-size:13px; color:var(--muted); border-bottom:1px solid #eef6f6; }
+    .table tbody td { padding:12px 10px; font-size:14px; color:#0f2f33; border-bottom:1px solid #fafdfd; vertical-align:middle; }
+    .table tbody tr:hover { background: rgba(13,110,253,0.03); }
+
+    .status-pill {
+      padding:6px 12px;
+      border-radius:999px;
+      font-weight:700;
+      font-size:13px;
+      display:inline-block;
+    }
+    .status-pending { background: #fff4e5; color: #b26b00; }
+    .status-confirmed { background: #e5f8f5; color: #0a6b46; }
+    .status-cancelled { background: #ffe5e5; color: #b22e2e; }
+
+    .table-actions { display:flex; gap:8px; align-items:center; }
+    .action-btn { padding:8px 10px; border-radius:8px; font-weight:700; border:none; cursor:pointer; }
+    .action-edit { color:var(--accent-deep); border:1px solid rgba(13,110,253,0.06); background:transparent; }
+    .action-cancel { color:#b22e2e; border:1px solid rgba(178,46,46,0.06); background:transparent; }
+
+    .filter-row { display:flex; gap:10px; margin-bottom:12px; flex-wrap:wrap; }
+    .filter-row select { padding:10px 12px; border-radius:10px; border:1px solid #e6eef0; background:#fff; }
+
+    .btn-primary { padding:12px 16px; border-radius:10px; border:none; background: linear-gradient(90deg, var(--accent) 0%, var(--accent-2) 100%); color:#fff; font-weight:800; cursor:pointer; text-decoration:none; display:inline-block; }
+
+    @media (max-width:980px) {
+      .search-row, .filter-row { flex-direction:column; }
+    }
+  </style>
+</head>
+<body>
+  <header class="site-header" role="banner">
+    <div class="site-brand">
+      <svg class="logo-svg" viewBox="0 0 64 64" aria-hidden="true" focusable="false">
+        <defs><linearGradient id="g-appointment" x1="0" y1="0" x2="1" y2="1">
+          <stop offset="0" stop-color="#0d6efd"/><stop offset="1" stop-color="#0ec2b6"/></linearGradient></defs>
+        <rect rx="10" width="64" height="64" fill="url(#g-appointment)"/>
+        <g transform="translate(10,8)" fill="#fff">
+          <circle cx="11" cy="9" r="3.8"/>
+          <rect x="8" y="18" width="6" height="18" rx="3"/>
+          <path d="M30 10c0 5-8 8-8 8" stroke="#fff" stroke-width="2" fill="none" stroke-linecap="round"/>
+        </g>
+      </svg>
+      <span class="brand-name">Medicare Hub</span>
+    </div>
+  </header>
+
+  <main class="page-wrap" role="main">
+    <div class="page-header">
+      <div>
+        <h1 style="margin:0;font-size:20px;color:var(--accent-deep)">My Appointments</h1>
+        <p style="margin:6px 0 0 0;color:var(--muted);font-size:13px;">View, filter, or cancel your upcoming and past appointments.</p>
+      </div>
+
+      <div style="display:flex;gap:10px;align-items:center;">
+        <a href="patient_dashboard.html" class="btn-ghost">Back to Dashboard</a>
+        <a href="book_appointment.html" class="btn-primary">Book New Appointment</a>
+      </div>
+    </div>
+
+    <!-- Search & Filter -->
+    <div class="card" style="margin-bottom:20px;">
+      <div class="search-row">
+        <input type="search" name="q" placeholder="Search by doctor or patient name" aria-label="Search appointments">
+        <select aria-label="Filter by status">
+          <option value="">All Status</option>
+          <option value="pending">Pending</option>
+          <option value="confirmed">Confirmed</option>
+          <option value="cancelled">Cancelled</option>
+        </select>
+        <select aria-label="Filter by doctor">
+          <option value="">All Doctors</option>
+          <option value="1">Dr. Priya Sharma</option>
+          <option value="2">Dr. Rohit Kumar</option>
+          <option value="3">Dr. Asha Rao</option>
+        </select>
+      </div>
+    </div>
+
+    <!-- Appointments Table -->
+    <div class="card">
+      <table class="table" role="table">
+        <thead>
+          <tr>
+            <th scope="col">Patient</th>
+            <th scope="col">Doctor</th>
+            <th scope="col">Date</th>
+            <th scope="col">Time</th>
+            <th scope="col">Status</th>
+            <th scope="col">Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          <!-- Example static row; replace with Django loop -->
+          <!-- {% for appt in appointments %} -->
+          <tr>
+            <td><!-- {{ appt.patient.name }} --> John Doe</td>
+            <td><!-- {{ appt.doctor.name }} --> Dr. Priya Sharma</td>
+            <td><!-- {{ appt.date }} --> 12 Aug 2025</td>
+            <td><!-- {{ appt.time }} --> 10:30 AM</td>
+            <td><span class="status-pill status-confirmed">Confirmed</span></td>
+            <td class="table-actions">
+              <a class="action-btn action-edit" href="#" title="View appointment details">View</a>
+              <form method="post" action="#" style="display:inline;">
+                <!-- {% csrf_token %} -->
+                <input type="hidden" name="appointment_id" value="123">
+                <button type="submit" class="action-btn action-cancel">Cancel</button>
+              </form>
+            </td>
+          </tr>
+
+          <tr>
+            <td>Jane Smith</td>
+            <td>Dr. Rohit Kumar</td>
+            <td>22 Aug 2025</td>
+            <td>02:00 PM</td>
+            <td><span class="status-pill status-pending">Pending</span></td>
+            <td class="table-actions">
+              <a class="action-btn action-edit" href="#">View</a>
+              <form method="post" action="#">
+                <!-- {% csrf_token %} -->
+                <input type="hidden" name="appointment_id" value="124">
+                <button type="submit" class="action-btn action-cancel">Cancel</button>
+              </form>
+            </td>
+          </tr>
+          <!-- {% endfor %} -->
+        </tbody>
+      </table>
+    </div>
+  </main>
+
+  <footer class="site-footer">
+    <small>© <span id="year">2025</span> Medicare Hub — Secure medical appointments</small>
+  </footer>
+
+  <!-- Integration notes:
+       - Replace static rows with Django loop over appointments:
+         {% for appt in appointments %}
+       - Use Django {% csrf_token %} inside POST forms
+       - status-pill class depends on appointment status:
+         status-confirmed / status-pending / status-cancelled
+       - Filters & search: integrate GET parameters backend
+  -->
+</body>
+</html>

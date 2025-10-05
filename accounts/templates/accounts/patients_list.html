@@ -1,0 +1,67 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Patients List — Medicare Hub</title>
+  <link rel="stylesheet" href="{% static 'css/style.css' %}">
+  <style>
+    .patients-wrap { max-width: var(--max-width); margin: 20px auto; padding: 0 18px; }
+    .main-header { display:flex; justify-content:space-between; align-items:center; margin-bottom:18px; }
+    .main-header h1 { font-size:20px; color:var(--accent-deep); margin:0; }
+    .btn-ghost { padding:8px 12px; border-radius:8px; border:1px dashed rgba(13,110,253,0.2); background:#fff; cursor:pointer; color:var(--accent-deep); }
+    .table { width:100%; border-collapse:collapse; }
+    .table th, .table td { padding:12px 10px; font-size:14px; text-align:left; border-bottom:1px solid #eef6f6; }
+  </style>
+</head>
+<body>
+  <header class="site-header">
+    <div class="site-brand">
+      <span class="brand-name">Medicare Hub</span>
+    </div>
+  </header>
+
+  <main class="patients-wrap">
+    <div class="main-header">
+      <h1>All Patients</h1>
+      <a href="{% url 'doctor_dashboard' %}" class="btn-ghost">← Back to Dashboard</a>
+    </div>
+
+    <section class="card">
+      <table class="table">
+        <thead>
+          <tr>
+            <th>Patient</th>
+            <th>Age</th>
+            <th>Gender</th>
+            <th>Blood Group</th>
+            <th>Phone</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for patient in patients %}
+          <tr>
+            <td>{{ patient.user.username }}</td>
+            <td>{{ patient.age|default:"-" }}</td>
+            <td>{{ patient.gender|default:"-" }}</td>
+            <td>{{ patient.blood_group|default:"-" }}</td>
+            <td>{{ patient.phone|default:"-" }}</td>
+          </tr>
+          {% empty %}
+          <tr>
+            <td colspan="5" style="text-align:center; padding:20px; color:var(--muted);">
+              No patients found.
+            </td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <small>© 2025 Medicare Hub — Secure medical appointments</small>
+  </footer>
+</body>
+</html>

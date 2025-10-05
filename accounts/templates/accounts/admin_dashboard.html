@@ -1,0 +1,362 @@
+<!-- File: templates/admin_dashboard.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Medicare Hub — Admin Dashboard</title>
+
+  <!-- Main theme CSS (shared) -->
+  <link rel="stylesheet" href="/static/css/style.css">
+
+  <!-- small page-specific adjustments (keeps visual harmony with style.css) -->
+  <style>
+    :root {
+      --dash-gap: 22px;
+      --card-padding: 20px;
+    }
+
+    .dashboard-wrap {
+      max-width: var(--max-width);
+      margin: 18px auto;
+      padding: 0 18px;
+    }
+
+    .top-nav {
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      padding: 12px 0;
+      gap:12px;
+    }
+
+    .nav-links { display:flex; gap:12px; align-items:center; }
+    .nav-links a { color: var(--accent-deep); text-decoration:none; font-weight:600; padding:8px 12px; border-radius:8px; }
+    .nav-links a.active { background: rgba(13,110,253,0.08); }
+
+    .dashboard-grid {
+      display:grid;
+      grid-template-columns: 300px 1fr 300px;
+      gap: var(--dash-gap);
+      align-items:start;
+      margin-top:12px;
+    }
+
+    .card { background: var(--card-bg); padding: var(--card-padding); border-radius:12px; box-shadow: var(--shadow); }
+
+    .admin-stats { display:grid; gap:12px; }
+    .stat-tile { display:flex; justify-content:space-between; align-items:center; padding:12px; border-radius:10px; background:linear-gradient(180deg,#fff,#fbfeff); }
+    .stat-tile .num { font-weight:800; color:var(--accent-deep); }
+    .stat-tile .label { color:var(--muted); font-size:13px; }
+
+    /* Search & filters */
+    .search-row { display:flex; gap:10px; margin-bottom:12px; }
+    .search-row input[type="search"] { flex:1; padding:10px 12px; border-radius:10px; border:1px solid #e6eef0; }
+    .select-small { padding:10px 12px; border-radius:10px; border:1px solid #e6eef0; background:#fff; }
+
+    /* Table */
+    .table { width:100%; border-collapse:collapse; margin-top:8px; }
+    .table thead th { text-align:left; padding:12px 10px; font-size:13px; color:var(--muted); border-bottom:1px solid #eef6f6; }
+    .table td { padding:12px 10px; border-bottom:1px solid #fafdfd; vertical-align:middle; font-size:14px; color:#0f2f33; }
+    .table tbody tr:hover { background: rgba(13,110,253,0.03); }
+
+    .role-pill { padding:6px 10px; border-radius:999px; font-weight:700; font-size:13px; background: rgba(13,110,253,0.06); color:var(--accent-deep); }
+
+    .table-actions { display:flex; gap:8px; align-items:center; }
+
+    .action-btn { padding:8px 10px; border-radius:8px; font-weight:700; border:none; cursor:pointer; }
+    .action-edit { color:var(--accent-deep); border:1px solid rgba(13,110,253,0.06); background:transparent; }
+    .action-deactivate { color:#b22e2e; border:1px solid rgba(178,46,46,0.06); background:transparent; }
+
+    .system-card ul { list-style:none; padding:0; margin:0; display:grid; gap:8px; }
+    .sys-item { font-size:13px; color:var(--muted); background:linear-gradient(180deg,#fff,#fbfeff); padding:10px; border-radius:8px; }
+
+    @media (max-width:1000px) {
+      .dashboard-grid { grid-template-columns: 1fr; }
+      .top-nav { flex-direction:column; align-items:flex-start; gap:8px; }
+    }
+  </style>
+</head>
+<body>
+  <header class="site-header" role="banner">
+    <div class="site-brand">
+      <svg class="logo-svg" viewBox="0 0 64 64" aria-hidden="true" focusable="false">
+        <defs><linearGradient id="g-admin" x1="0" y1="0" x2="1" y2="1">
+          <stop offset="0" stop-color="#0d6efd"/><stop offset="1" stop-color="#0ec2b6"/></linearGradient></defs>
+        <rect rx="10" width="64" height="64" fill="url(#g-admin)"/>
+        <g transform="translate(10,8)" fill="#fff">
+          <circle cx="11" cy="9" r="3.8"/>
+          <rect x="8" y="18" width="6" height="18" rx="3"/>
+          <path d="M30 10c0 5-8 8-8 8" stroke="#fff" stroke-width="2" fill="none" stroke-linecap="round"/>
+        </g>
+      </svg>
+      <span class="brand-name">Medicare Hub</span>
+    </div>
+  </header>
+
+  <main class="dashboard-wrap" role="main">
+    <div class="top-nav" role="navigation" aria-label="Admin navigation">
+      <div>
+        <h1 style="font-size:18px;margin:0;color:var(--accent-deep)">Admin Dashboard</h1>
+        <p style="margin:4px 0 0 0;color:var(--muted);font-size:13px;">Manage users, appointments and system settings</p>
+      </div>
+
+      <div class="nav-links">
+        <a href="admin_dashboard.html" class="active">Overview</a>
+        <a href="admin_users.html">Users</a>
+        <a href="admin_appointments.html">Appointments</a>
+        <a href="#" class="btn-ghost" title="Logout (replace with {% url 'logout' %})">Logout</a>
+      </div>
+    </div>
+
+    <section class="dashboard-grid" aria-label="Admin grid">
+
+      <!-- LEFT: Admin quick stats -->
+      <aside class="card">
+        <h3 style="margin:0 0 10px 0;color:#0b3440">Quick stats</h3>
+        <div class="admin-stats">
+          <div class="stat-tile">
+            <div>
+              <div class="label">Total users</div>
+              <div class="num"><!-- {{ total_users }} --> 3,482</div>
+            </div>
+            <div aria-hidden="true">👥</div>
+          </div>
+
+          <div class="stat-tile">
+            <div>
+              <div class="label">Doctors</div>
+              <div class="num"><!-- {{ total_doctors }} --> 412</div>
+            </div>
+            <div aria-hidden="true">🩺</div>
+          </div>
+
+          <div class="stat-tile">
+            <div>
+              <div class="label">Patients</div>
+              <div class="num"><!-- {{ total_patients }} --> 2,900</div>
+            </div>
+            <div aria-hidden="true">🧑‍⚕️</div>
+          </div>
+
+          <div class="stat-tile">
+            <div>
+              <div class="label">Appointments (pending)</div>
+              <div class="num"><!-- {{ pending_appointments }} --> 28</div>
+            </div>
+            <div aria-hidden="true">📅</div>
+          </div>
+        </div>
+
+        <hr style="margin:14px 0;border:none;border-top:1px solid #f1fbfb">
+
+        <a href="admin_users.html" class="btn-primary" style="display:block;text-align:center;">Manage users</a>
+        <a href="admin_appointments.html" class="btn-ghost" style="display:block;margin-top:10px;text-align:center;">Manage appointments</a>
+      </aside>
+
+      <!-- CENTER: Users management & Appointments management -->
+      <section style="display:flex;flex-direction:column;gap:18px;">
+
+        <!-- Users management card -->
+        <div class="card" aria-labelledby="users-title">
+          <div style="display:flex;justify-content:space-between;align-items:center;">
+            <h2 id="users-title" style="margin:0;color:var(--accent-deep)">Users</h2>
+
+            <div style="display:flex;gap:8px;align-items:center;">
+              <form method="get" action="#" role="search" style="display:flex;">
+                <label for="search-users" class="sr-only">Search users</label>
+                <input id="search-users" type="search" name="q" placeholder="Search by name / email" aria-label="Search users">
+              </form>
+
+              <select class="select-small" aria-label="Filter by role">
+                <option value="">All roles</option>
+                <option value="doctor">Doctors</option>
+                <option value="patient">Patients</option>
+                <option value="admin">Admins</option>
+              </select>
+
+              <a href="#" class="btn-ghost" title="Add new user (replace with admin create user link)">Add user</a>
+            </div>
+          </div>
+
+          <div style="overflow:auto;margin-top:10px;">
+            <table class="table" role="table" aria-describedby="users-title">
+              <thead>
+                <tr>
+                  <th scope="col">Name</th>
+                  <th scope="col">Email</th>
+                  <th scope="col">Role</th>
+                  <th scope="col">Status</th>
+                  <th scope="col">Actions</th>
+                </tr>
+              </thead>
+
+              <tbody>
+                <!-- Example static rows. Replace with Django loop:
+                     {% for user in users %}
+                       <tr> ... </tr>
+                     {% empty %}
+                       <tr><td colspan="5">No users found.</td></tr>
+                     {% endfor %}
+                -->
+
+                <tr>
+                  <td><!-- {{ user.get_full_name }} --> Dr. Priya Sharma</td>
+                  <td><!-- {{ user.email }} --> priya.sharma@hospital.com</td>
+                  <td><span class="role-pill">Doctor</span></td>
+                  <td><!-- {{ user.is_active }} --> Active</td>
+                  <td class="table-actions">
+                    <a class="action-btn action-edit" href="#" title="Edit user (replace with edit URL)">Edit</a>
+
+                    <form method="post" action="#" style="display:inline;">
+                      <!-- csrf_token will come here -->
+                      <!-- action should be: {% url 'admin_deactivate_user' user.id %} -->
+                      <input type="hidden" name="user_id" value="412">
+                      <button type="submit" class="action-btn action-deactivate">Deactivate</button>
+                    </form>
+                  </td>
+                </tr>
+
+                <tr>
+                  <td>John Doe</td>
+                  <td>john.doe@example.com</td>
+                  <td><span class="role-pill">Patient</span></td>
+                  <td>Suspended</td>
+                  <td class="table-actions">
+                    <a class="action-btn action-edit" href="#">Edit</a>
+                    <form method="post" action="#" style="display:inline;">
+                      <!-- csrf_token -->
+                      <input type="hidden" name="user_id" value="2990">
+                      <button type="submit" class="action-btn action-deactivate">Reactivate</button>
+                    </form>
+                  </td>
+                </tr>
+
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- Appointments management card -->
+        <div class="card" aria-labelledby="appointments-title">
+          <div style="display:flex;justify-content:space-between;align-items:center;">
+            <h2 id="appointments-title" style="margin:0;color:var(--accent-deep)">Appointments</h2>
+
+            <div style="display:flex;gap:8px;align-items:center;">
+              <select class="select-small" aria-label="Filter appointments">
+                <option value="">All</option>
+                <option value="pending">Pending</option>
+                <option value="confirmed">Confirmed</option>
+                <option value="cancelled">Cancelled</option>
+              </select>
+              <a href="appointments.html" class="btn-ghost">Open Appointments</a>
+            </div>
+          </div>
+
+          <div style="overflow:auto;margin-top:10px;">
+            <table class="table">
+              <thead>
+                <tr>
+                  <th>Patient</th>
+                  <th>Doctor</th>
+                  <th>Date</th>
+                  <th>Time</th>
+                  <th>Status</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+
+              <tbody>
+                <!-- Replace with {% for appt in appointments %} -->
+                <tr>
+                  <td>John Doe</td>
+                  <td>Dr. Priya Sharma</td>
+                  <td>12 Aug 2025</td>
+                  <td>10:30 AM</td>
+                  <td><span class="status-pill status-confirmed">Confirmed</span></td>
+                  <td class="table-actions">
+                    <a class="action-btn action-edit" href="#">View</a>
+                    <form method="post" action="#" style="display:inline;">
+                      <!-- csrf_token -->
+                      <input type="hidden" name="appointment_id" value="123">
+                      <button type="submit" class="action-btn action-deactivate">Cancel</button>
+                    </form>
+                  </td>
+                </tr>
+
+                <tr>
+                  <td>Jane Smith</td>
+                  <td>Dr. Rohit Kumar</td>
+                  <td>22 Aug 2025</td>
+                  <td>02:00 PM</td>
+                  <td><span class="status-pill status-pending">Pending</span></td>
+                  <td class="table-actions">
+                    <a class="action-btn action-edit" href="#">View</a>
+                    <form method="post" action="#" style="display:inline;">
+                      <!-- csrf_token -->
+                      <input type="hidden" name="appointment_id" value="124">
+                      <button type="submit" class="action-btn action-deactivate">Cancel</button>
+                    </form>
+                  </td>
+                </tr>
+
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+      </section>
+
+      <!-- RIGHT: System & quick actions -->
+     <aside class="card system-card" aria-labelledby="system-title">
+  <div style="display:flex;justify-content:space-between;align-items:center;">
+    <h3 id="system-title" style="margin:0;color:#0b3440">System</h3>
+    <a href="#" class="text-link small" title="Settings">Settings</a>
+  </div>
+
+  <ul>
+    <li class="sys-item">
+      <strong>Backups:</strong> Last backup: <!-- {{ last_backup }} --> 2025-08-24
+    </li>
+    <li class="sys-item">
+      <strong>Pending verifications:</strong> <!-- {{ pending_verifications }} --> 7
+    </li>
+    <li class="sys-item">
+      <strong>API usage (24h):</strong> <!-- {{ api_usage_24h }} --> 1,432 calls
+    </li>
+  </ul>
+
+  <hr style="margin:14px 0;border:none;border-top:1px solid #f1fbfb">
+
+  <div style="display:grid;gap:12px;"> <!-- increased gap -->
+    <form method="post" action="#" style="display:inline;">
+      <!-- csrf_token -->
+      <button type="submit" class="btn-primary" title="Run system health check">Run health check</button>
+    </form>
+
+    <form method="post" action="#" style="display:inline;">
+      <!-- csrf_token -->
+      <button type="submit" class="btn-ghost" title="Trigger backup">Trigger backup</button>
+    </form>
+  </div>
+</aside>
+
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <small>© <span id="year">2025</span> Medicare Hub — Secure medical appointments</small>
+  </footer>
+
+  <!-- Integration notes:
+       - Replace static numbers & sample rows with Django variables and loops.
+         e.g. users loop: {% for user in users %} ... {% endfor %}
+       - Insert {% csrf_token %} inside all POST forms.
+       - Replace action="#" with actual Django URLs:
+         action="{% url 'admin_deactivate_user' user.id %}"
+         action="{% url 'admin_cancel_appointment' appt.id %}"
+       - Use pagination for long lists server-side and include links.
+       - Consider extracting rows to partial templates (partials/user_row.html).
+  -->
+</body>
+</html>

@@ -1,0 +1,53 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Medicare Hub — Book Appointment</title>
+  <link rel="stylesheet" href="{% static 'css/style.css' %}">
+  <style>
+    .wrap { max-width:600px; margin:30px auto; padding:0 18px; }
+    h1 { font-size:22px; color:var(--accent-deep); margin-bottom:20px; }
+    form { background:var(--card-bg); padding:20px; border-radius:12px; box-shadow:var(--shadow); }
+    label { display:block; margin:10px 0 4px; font-weight:600; color:#0b3440; }
+    input, select, textarea {
+      width:100%; padding:10px; border-radius:8px; border:1px solid #dde7eb; font-size:14px;
+    }
+    button { margin-top:16px; padding:10px 14px; border-radius:8px; border:none; cursor:pointer; font-weight:700; }
+    .btn-primary { background:var(--accent-deep); color:#fff; }
+  </style>
+</head>
+<body>
+  <header class="site-header"><div class="site-brand">Medicare Hub</div></header>
+
+  <main class="wrap">
+    <h1>Book New Appointment</h1>
+
+    <form method="post" action="{% url 'book_appointment' %}">
+      {% csrf_token %}
+
+      <label for="doctor">Select Doctor</label>
+      <select id="doctor" name="doctor" required>
+        <option value="">-- Select Doctor --</option>
+        {% for doc in doctors %}
+          <option value="{{ doc.id }}">{{ doc.user.username }} — {{ doc.specialization }}</option>
+        {% endfor %}
+      </select>
+
+      <label for="date">Choose Date</label>
+      <input type="date" id="date" name="date" required>
+
+      <label for="time">Choose Time</label>
+      <input type="time" id="time" name="time" required>
+
+      <label for="reason">Reason for Visit</label>
+      <textarea id="reason" name="reason" placeholder="Describe your symptoms or reason for appointment"></textarea>
+
+      <button type="submit" class="btn-primary">Book Appointment</button>
+    </form>
+  </main>
+
+  <footer class="site-footer"><small>© 2025 Medicare Hub</small></footer>
+</body>
+</html>

@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  {% load static %}
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Medicare Hub — Doctor Profile</title>
+  <link rel="stylesheet" href="{% static 'css/style.css' %}">
+  <style>
+    .profile-wrap { max-width:700px; margin:30px auto; padding:0 18px; }
+    .card { background:var(--card-bg); padding:24px; border-radius:12px; box-shadow:var(--shadow); }
+    h1 { font-size:22px; color:var(--accent-deep); margin-bottom:18px; }
+    label { display:block; margin:10px 0 4px; font-weight:600; color:#0b3440; }
+    input, select {
+      width:100%; padding:10px; border-radius:8px; border:1px solid #dde7eb; font-size:14px;
+    }
+    button { margin-top:16px; padding:10px 14px; border-radius:8px; border:none; cursor:pointer; font-weight:700; }
+    .btn-primary { background:var(--accent-deep); color:#fff; }
+    .btn-ghost { margin-top:12px; display:inline-block; padding:8px 12px; border-radius:8px; border:1px dashed rgba(13,110,253,0.2); text-decoration:none; color:var(--accent-deep); }
+  </style>
+</head>
+<body>
+<header class="site-header">
+  <div class="site-brand">
+    <span class="brand-name">Medicare Hub</span>
+  </div>
+</header>
+
+<main class="profile-wrap">
+  <section class="card">
+    <h1>Edit Doctor Profile</h1>
+    <form method="post">
+      {% csrf_token %}
+      
+      <label for="specialization">Specialization</label>
+      <input type="text" id="specialization" name="specialization" value="{{ form.specialization.value|default_if_none:'' }}" required>
+      
+      <label for="phone">Phone</label>
+      <input type="text" id="phone" name="phone" value="{{ form.phone.value|default_if_none:'' }}">
+      
+      <label for="experience_years">Years of Experience</label>
+      <input type="number" id="experience_years" name="experience_years" value="{{ form.experience_years.value|default_if_none:'' }}">
+      
+      <label for="qualification">Qualification</label>
+      <input type="text" id="qualification" name="qualification" value="{{ form.qualification.value|default_if_none:'' }}">
+
+      <label for="id_license_number">License Number</label>
+      {{ form.license_number }}
+      <small style="font-size:12px;color:gray;">(Assigned at registration — cannot be changed)</small>
+      </div>
+
+
+      
+      <button type="submit" class="btn-primary">Save Changes</button>
+    </form>
+    
+    <a href="{% url 'doctor_dashboard' %}" class="btn-ghost">← Back to Dashboard</a>
+  </section>
+</main>
+
+<footer class="site-footer">
+  <small>© 2025 Medicare Hub — Secure medical appointments</small>
+</footer>
+</body>
+</html>

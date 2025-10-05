@@ -1,0 +1,48 @@
+<!-- File: templates/accounts/appointment_cancel_confirm.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  {% load static %}
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Cancel Appointment — Medicare Hub</title>
+  <link rel="stylesheet" href="{% static 'css/style.css' %}">
+  <style>
+    .card { max-width: 600px; margin: 30px auto; padding: 20px; border-radius: 12px; background: var(--card-bg); box-shadow: var(--shadow); }
+    h1 { color: #b22e2e; font-size: 20px; margin-bottom: 12px; }
+    p { font-size: 15px; color: #0b3440; }
+    .btn-group { margin-top: 20px; display: flex; gap: 12px; }
+  </style>
+</head>
+<body>
+<header class="site-header">
+  <div class="site-brand">
+    <span class="brand-name">Medicare Hub</span>
+  </div>
+</header>
+
+<main class="dashboard-wrap">
+  <section class="card">
+    <h1>Cancel Appointment</h1>
+    <p>
+      Are you sure you want to cancel your appointment with 
+      <strong>Dr. {{ appointment.doctor.user.username }}</strong> 
+      ({{ appointment.doctor.specialization }}) on 
+      <strong>{{ appointment.date }} at {{ appointment.time }}</strong>?
+    </p>
+
+    <form method="post" action="{% url 'appointment_cancel' appointment.id %}">
+      {% csrf_token %}
+      <div class="btn-group">
+        <button type="submit" class="btn-secondary">Yes, Cancel</button>
+        <a href="{% url 'patient_dashboard' %}" class="btn-ghost">No, Go Back</a>
+      </div>
+    </form>
+  </section>
+</main>
+
+<footer class="site-footer">
+  <small>© 2025 Medicare Hub — Secure medical appointments</small>
+</footer>
+</body>
+</html>

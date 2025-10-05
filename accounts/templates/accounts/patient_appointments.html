@@ -1,0 +1,144 @@
+<!-- File: templates/accounts/patient_appointments.html -->
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Medicare Hub — My Appointments</title>
+  <link rel="stylesheet" href="{% static 'css/style.css' %}">
+  <style>
+    .appointments-wrap {
+      max-width: var(--max-width);
+      margin: 20px auto;
+      padding: 0 18px;
+    }
+    .main-header { 
+      display:flex; 
+      justify-content:space-between; 
+      align-items:center; 
+      margin-bottom:18px;
+      gap: 10px;
+    }
+    .main-header h1 { font-size:20px; color:var(--accent-deep); margin:0; }
+    .nav-actions { display:flex; gap:10px; }
+    .btn-ghost { padding:8px 12px; border-radius:8px; border:1px dashed rgba(13,110,253,0.2); background:#fff; cursor:pointer; color:var(--accent-deep); text-decoration:none; font-weight:600; }
+    .table { width:100%; border-collapse:collapse; }
+    .table th, .table td { padding:12px 10px; font-size:14px; text-align:left; border-bottom:1px solid #eef6f6; }
+    .status-pill { padding:6px 10px; border-radius:999px; font-size:13px; font-weight:700; }
+    .status-Confirmed { background: rgba(14,194,182,0.12); color:var(--accent-deep); }
+    .status-Pending { background: rgba(13,110,253,0.08); color:var(--accent-deep); }
+    .status-Cancelled { background: rgba(255,90,90,0.08); color:#b22e2e; }
+    .status-Completed { background: rgba(0,200,83,0.12); color:#057a35; }
+    .row-actions { display:flex; gap:8px; }
+    .action-btn { padding:6px 10px; border-radius:8px; font-size:13px; font-weight:600; cursor:pointer; border:none; text-decoration:none; }
+    .action-btn.view { background:#f8fbff; border:1px solid rgba(13,110,253,0.2); color:var(--accent-deep); }
+    .action-btn.cancel { background:#fff5f5; border:1px solid rgba(178,46,46,0.2); color:#b22e2e; }
+    .messages { margin: 15px auto; max-width: 700px; }
+    .alert { padding: 10px 14px; border-radius: 8px; margin-bottom: 10px; font-weight: 600; }
+    .alert-success { background: rgba(14,194,182,0.12); color: var(--accent-deep); }
+    .alert-error { background: rgba(255,90,90,0.08); color: #b22e2e; }
+    .alert-warning { background: rgba(255,193,7,0.12); color: #8a6d3b; }
+  </style>
+</head>
+<body>
+  <header class="site-header">
+    <div class="site-brand">
+      <span class="brand-name">Medicare Hub</span>
+    </div>
+  </header>
+
+  <main class="appointments-wrap">
+    <div class="main-header">
+      <h1>My Appointments</h1>
+      <div class="nav-actions">
+        <a href="{% url 'patient_dashboard' %}" class="btn-ghost">← Back to Dashboard</a>
+        <a href="{% url 'book_appointment' %}" class="btn-ghost">+ Book New</a>
+      </div>
+    </div>
+
+    
+
+    <!-- Upcoming Appointments -->
+    <section class="card" style="margin-bottom:24px;">
+      <h2 style="margin:0 0 10px 0; color:var(--accent-deep); font-size:16px;">Upcoming Appointments</h2>
+      <table class="table">
+        <thead>
+          <tr>
+            <th>Date</th><th>Time</th><th>Doctor</th><th>Status</th><th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+        {% for appt in upcoming_appointments %}
+        <tr>
+          <td>{{ appt.date }}</td>
+          <td>{{ appt.time }}</td>
+          <td>Dr. {{ appt.doctor.user.username }} — {{ appt.doctor.specialization }}</td>
+          <td>
+            <span class="status-pill status-{{ appt.status }}">
+              {{ appt.status }}
+            </span>
+          </td>
+          <td>
+            <div class="row-actions">
+              <a href="{% url 'appointment_detail' appt.id %}" class="action-btn view">View</a>
+              {% comment %} <a href="{% url 'appointment_cancel' appt.id %}" class="action-btn cancel">Cancel</a> {% endcomment %}
+            </div>
+          </td>
+        </tr>
+        {% empty %}
+        <tr>
+          <td colspan="5" style="text-align:center;color:var(--muted);padding:20px;">
+            No upcoming appointments. <a href="{% url 'book_appointment' %}">Book one now</a>.
+          </td>
+        </tr>
+        {% endfor %}
+        </tbody>
+      </table>
+    </section>
+
+    <!-- Past Appointments -->
+    <section class="card">
+      <h2 style="margin:0 0 10px 0; color:var(--accent-deep); font-size:16px;">Past Appointments</h2>
+      <table class="table">
+        <thead>
+          <tr>
+            <th>Date</th><th>Doctor</th><th>Reason</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for appt in past_appointments %}
+            <tr>
+              <td>{{ appt.date }}</td>
+              <td>Dr. {{ appt.doctor.user.username }} — {{ appt.doctor.specialization }}</td>
+              <td>{{ appt.reason|default:"-" }}</td>
+            </tr>
+          {% empty %}
+            <tr>
+              <td colspan="3" style="text-align:center; padding:16px; color:var(--muted);">
+                No past appointments found.
+              </td> 
+            </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </section>
+    <form method="post" action="{% url 'clear_past_appointments' %}" style="margin-top:16px;">
+     {% csrf_token %}
+     <button type="submit" class="btn-ghost"
+        onclick="return confirm('Are you sure you want to clear all past appointments?');"
+        style="color:#b22e2e; border:1px solid rgba(178,46,46,0.2);">
+        Clear Past Appointments
+     </button>
+
+    </form>
+
+
+
+  </main>
+
+  <footer class="site-footer">
+    <small>© <span id="year">2025</span> Medicare Hub — Secure medical appointments</small>
+  </footer>
+</body>
+</html>

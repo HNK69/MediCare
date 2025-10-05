@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Medicare Hub — Create Account</title>
+
+    <!-- Tailwind CSS for styling -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Google Fonts: Inter -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+    <!-- Custom Styles -->
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f8fafc;
+        }
+
+        .gradient-text {
+            background: linear-gradient(to right, #2196F3, #03A9F4);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .form-input {
+            width: 100%;
+            padding: 0.75rem 1rem;
+            border: 1px solid #d1d5db;
+            border-radius: 0.5rem;
+            transition: all 0.2s ease-in-out;
+        }
+        .form-input:focus {
+            outline: none;
+            border-color: #2196F3;
+            box-shadow: 0 0 0 3px rgba(33, 150, 243, 0.2);
+        }
+
+        .custom-checkbox {
+            appearance: none;
+            width: 1.25rem;
+            height: 1.25rem;
+            border: 2px solid #9ca3af;
+            border-radius: 0.25rem;
+            margin-right: 0.5rem;
+            cursor: pointer;
+            position: relative;
+            top: 0.2rem;
+        }
+        .custom-checkbox:checked {
+            background-color: #2196F3;
+            border-color: #2196F3;
+        }
+        .custom-checkbox:checked::after {
+            content: '✔';
+            color: white;
+            position: absolute;
+            left: 50%;
+            top: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 0.8rem;
+        }
+
+        .form-field-error {
+            color: #ef4444;
+            font-size: 0.875rem;
+            margin-top: 0.25rem;
+        }
+
+        /* Ghost button for landing page link */
+        .btn-ghost {
+            display: inline-block;
+            padding: 0.65rem 1.25rem;
+            border: 2px solid transparent;
+            border-image: linear-gradient(to right, #2196F3, #03A9F4) 1;
+            border-radius: 0.5rem;
+            font-weight: 600;
+            color: #2196F3;
+            transition: all 0.3s ease;
+            text-align: center;
+        }
+        .btn-ghost:hover {
+            background: linear-gradient(to right, #2196F3, #03A9F4);
+            color: white;
+        }
+    </style>
+</head>
+<body class="flex flex-col min-h-screen items-center justify-center p-4">
+
+    <!-- Header with Logo -->
+    <header class="text-center mb-8">
+        <div class="flex items-center justify-center">
+            <img src="https://img.icons8.com/fluency/48/caduceus.png" alt="Medicare Hub Logo" class="h-10 w-10">
+            <span class="text-3xl font-extrabold ml-2 tracking-tight text-gray-800">Medicare Hub</span>
+        </div>
+    </header>
+
+    <!-- Registration Card -->
+    <main class="w-full max-w-4xl" role="main">
+        <div class="bg-white rounded-2xl shadow-xl flex flex-col md:flex-row overflow-hidden">
+            
+            <!-- Left Panel -->
+            <div class="w-full md:w-1/2 p-8 md:p-12 text-white" style="background: linear-gradient(to top right, #03A9F4, #2196F3);">
+                <h1 class="text-3xl font-bold mb-4">Join Medicare Hub Today</h1>
+                <p class="mb-8 opacity-90">Securely manage patients, appointments, and records — designed for modern healthcare professionals.</p>
+                <ul class="space-y-4">
+                    <li class="flex items-center">
+                        <svg class="w-6 h-6 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 20.944a12.02 12.02 0 009 3.056c4.522 0 8.354-2.54 9.998-6.084A11.956 11.956 0 0121.618 11.984z"></path></svg>
+                        <span>Encrypted Patient Records</span>
+                    </li>
+                    <li class="flex items-center">
+                        <svg class="w-6 h-6 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
+                        <span>Easy Appointment Scheduling</span>
+                    </li>
+                    <li class="flex items-center">
+                        <svg class="w-6 h-6 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"></path></svg>
+                        <span>HIPAA-Friendly Interface</span>
+                    </li>
+                </ul>
+            </div>
+            
+            <!-- Right Panel -->
+            <div class="w-full md:w-1/2 p-8 md:p-12">
+                <h2 class="text-3xl font-bold mb-1 text-gray-800">Create Account</h2>
+                <p class="text-gray-600 mb-6">Let's get you started.</p>
+
+                {% if form.non_field_errors %}
+                <div class="bg-red-100 border-l-4 border-red-500 text-red-700 p-4 mb-4 rounded-md" role="alert">
+                    {{ form.non_field_errors }}
+                </div>
+                {% endif %}
+
+                <form method="post" action="{% url 'register' %}" class="space-y-5" autocomplete="on" novalidate>
+                    {% csrf_token %}
+                    
+                    <!-- Full name -->
+                    <div>
+                        <label for="id_username" class="block text-sm font-medium text-gray-700 mb-1">Full name</label>
+                        <input id="id_username" name="username" type="text" placeholder="Dr. A. Example" required maxlength="100" class="form-input" />
+                        <small id="username-help" class="text-xs text-gray-500 mt-1">Use your professional name (what patients will see).</small>
+                        <div class="form-field-error">{{ form.username.errors }}</div>
+                    </div>
+
+                    <!-- Email -->
+                    <div>
+                        <label for="id_email" class="block text-sm font-medium text-gray-700 mb-1">Email</label>
+                        <input id="id_email" name="email" type="email" placeholder="you@gmail.com" required maxlength="254" autocomplete="email" class="form-input" />
+                        <small id="email-help" class="text-xs text-gray-500 mt-1">We'll send a verification link to this email.</small>
+                        <div class="form-field-error">{{ form.email.errors }}</div>
+                    </div>
+
+                    <!-- Role -->
+                    <div>
+                        <label for="id_role" class="block text-sm font-medium text-gray-700 mb-1">Account type</label>
+                        <select id="id_role" name="role" required class="form-input">
+                            <option value="doctor" selected>Doctor</option>
+                            <option value="patient">Patient</option>
+                        </select>
+                        <div class="form-field-error">{{ form.role.errors }}</div>
+                    </div>
+
+                    <!-- License -->
+                    <div id="license-field">
+                        <label for="id_license" class="block text-sm font-medium text-gray-700 mb-1">Medical license number</label>
+                        <input id="id_license" name="license_number" type="text" placeholder="License or registration number" maxlength="60" required class="form-input" />
+                        <small id="license-help" class="text-xs text-gray-500 mt-1">Provide your registration/licence for verification.</small>
+                    </div>
+
+                    <!-- Passwords -->
+                    <div>
+                        <label for="id_password1" class="block text-sm font-medium text-gray-700 mb-1">Password</label>
+                        <input id="id_password1" name="password1" type="password" placeholder="Create a strong password" required minlength="8" autocomplete="new-password" class="form-input" />
+                        <small id="pwd-help" class="text-xs text-gray-500 mt-1">At least 8 characters.</small>
+                        <div class="form-field-error">{{ form.password1.errors }}</div>
+                    </div>
+
+                    <div>
+                        <label for="id_password2" class="block text-sm font-medium text-gray-700 mb-1">Confirm password</label>
+                        <input id="id_password2" name="password2" type="password" placeholder="Repeat your password" required minlength="8" autocomplete="new-password" class="form-input" />
+                        <div class="form-field-error">{{ form.password2.errors }}</div>
+                    </div>
+
+                    <!-- Terms -->
+                    <div class="flex items-center">
+                        <input type="checkbox" name="agree" id="id_agree" required class="custom-checkbox">
+                        <label for="id_agree" class="text-sm text-gray-600">I agree to the <a href="#" class="font-medium text-blue-600 hover:underline">Terms & Privacy</a></label>
+                    </div>
+
+                    <button type="submit" class="w-full text-white font-bold py-3 px-4 rounded-lg transition-all duration-300 disabled:opacity-50" style="background: linear-gradient(to right, #2196F3, #03A9F4);">
+                        Create Account
+                    </button>
+
+                    <!-- Back to landing page -->
+                    <div class="text-center mt-4">
+                        <a href="{% url 'home' %}" class="btn-ghost">← Back to Home</a>
+                    </div>
+
+                    <p class="text-center text-sm text-gray-600 mt-2">
+                        Already registered? <a href="{% url 'login' %}" class="font-medium text-blue-600 hover:underline">Sign in</a>
+                    </p>
+                </form>
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="text-center mt-8 text-gray-500 text-sm">
+        <small>© {% now "Y" %} Medicare Hub — Secure medical appointments</small>
+    </footer>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const roleSelect = document.getElementById("id_role");
+            const fullNameInput = document.getElementById("id_username");
+            const fullNameHelp = document.getElementById("username-help");
+            const licenseField = document.getElementById("license-field");
+            const licenseInput = document.getElementById("id_license");
+
+            function updateRoleFields() {
+                if (roleSelect.value === "doctor") {
+                    fullNameInput.placeholder = "Dr. A. Example";
+                    fullNameHelp.textContent = "Use your professional name (what patients will see).";
+                    licenseField.style.display = "block";
+                    licenseInput.setAttribute("required", "required");
+                } else {
+                    fullNameInput.placeholder = "John Doe";
+                    fullNameHelp.textContent = "Enter your full name as on records.";
+                    licenseField.style.display = "none";
+                    licenseInput.removeAttribute("required");
+                }
+            }
+            updateRoleFields();
+            roleSelect.addEventListener("change", updateRoleFields);
+
+            const termsCheckbox = document.getElementById("id_agree");
+            const submitBtn = document.querySelector("button[type='submit']");
+            function toggleSubmitButton() {
+                submitBtn.disabled = !termsCheckbox.checked;
+            }
+            toggleSubmitButton();
+            termsCheckbox.addEventListener("change", toggleSubmitButton);
+        });
+    </script>
+</body>
+</html>

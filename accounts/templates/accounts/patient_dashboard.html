@@ -1,0 +1,179 @@
+<!-- File: templates/patient_dashboard.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  {% load static %}
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Medicare Hub — Patient Dashboard</title>
+  <link rel="stylesheet" href="{% static 'css/style.css' %}">
+
+  <style>
+    :root {
+      --dash-gap: 22px;
+      --card-padding: 20px;
+      --muted-2: #6f8b90;
+    }
+    .dashboard-wrap { max-width: var(--max-width); margin: 18px auto; padding: 0 18px; }
+    .top-nav { display:flex; justify-content:space-between; align-items:center; padding: 12px 0; gap:12px; }
+    .nav-links { display:flex; gap:12px; align-items:center; }
+    .nav-links a { color: var(--accent-deep); text-decoration:none; font-weight:600; padding:8px 12px; border-radius:8px; }
+    .nav-links a.active { background: rgba(13,110,253,0.08); }
+
+    .dashboard-grid { display: grid; grid-template-columns: 300px 1fr 300px; gap: var(--dash-gap); align-items: start; margin-top: 12px; }
+    .card { background: var(--card-bg); padding: var(--card-padding); border-radius: 12px; box-shadow: var(--shadow); }
+
+    .profile-card { text-align:center; padding-top:28px; }
+    .avatar { width:92px; height:92px; border-radius: 999px; display:flex; align-items:center; justify-content:center; margin-bottom:12px;
+              background: linear-gradient(180deg,#e9fbff,#f0fdfb); border: 4px solid rgba(14,194,182,0.08); }
+    .avatar svg { width:56px; height:56px; fill:var(--accent-deep); }
+    .profile-name { font-size:18px; font-weight:700; color:#0b3440; margin-bottom:4px; }
+    .profile-meta { font-size:13px; color:var(--muted); margin-bottom:10px; }
+    .stat-row { display:flex; gap:10px; justify-content:center; margin-top:10px; }
+    .stat { background: linear-gradient(180deg, rgba(13,110,253,0.04), rgba(14,194,182,0.02)); padding:8px 12px; border-radius:10px;
+            font-weight:700; color:var(--accent-deep); font-size:13px; min-width:86px; text-align:center; }
+
+    .main-header { display:flex; justify-content:space-between; align-items:center; gap:12px; margin-bottom:12px; }
+    .main-header h2 { margin:0; font-size:20px; color:var(--accent-deep); }
+    .actions { display:flex; gap:10px; align-items:center; }
+    .btn-ghost { padding:8px 10px; border-radius:10px; background:transparent; border:1px dashed rgba(6,50,60,0.06); font-weight:600; color:var(--accent-deep); }
+
+    .table { width:100%; border-collapse:collapse; margin-top:8px; }
+    .table thead th { text-align:left; padding:12px 10px; font-size:13px; color:var(--muted); border-bottom: 1px solid #eef6f6; }
+    .table tbody tr:hover { background: rgba(13,110,253,0.03); }
+    .table td { padding:14px 10px; font-size:14px; color:#0f2f33; border-bottom: 1px solid #fafdfd; }
+    .status-pill { display:inline-block; padding:6px 10px; border-radius:999px; font-size:13px; font-weight:700; }
+    .status-confirmed { background: rgba(14,194,182,0.12); color:var(--accent-deep); }
+    .status-pending { background: rgba(13,110,253,0.08); color:var(--accent-deep); }
+    .status-cancelled { background: rgba(255,90,90,0.08); color:#b22e2e; }
+    .row-actions { display:flex; gap:8px; }
+    .action-btn { padding:8px 10px; border-radius:8px; font-weight:700; border:none; cursor:pointer; }
+    .action-btn.view { background: transparent; color: var(--accent-deep); border:1px solid rgba(13,110,253,0.06); }
+    .action-btn.cancel { background: transparent; color:#b22e2e; border:1px solid rgba(178,46,46,0.06); }
+
+    @media (max-width:1000px){ .dashboard-grid { grid-template-columns:1fr; } .top-nav{ flex-direction:column;align-items:flex-start;gap:8px; } }
+  </style>
+</head>
+<body>
+  <header class="site-header">
+    <div class="site-brand">
+      <span class="brand-name">Medicare Hub</span>
+    </div>
+  </header>
+
+  <main class="dashboard-wrap">
+    <div class="top-nav">
+      <div>
+        <h1 style="font-size:18px;margin:0;color:var(--accent-deep)">Patient Dashboard</h1>
+        <p style="margin:4px 0 0 0;color:var(--muted);font-size:13px;">Quick view of your appointments & care team</p>
+      </div>
+      <div class="nav-links">
+        <a href="{% url 'patient_dashboard' %}" class="active">Overview</a>
+        <a href="{% url 'patient_appointments' %}">Appointments</a>
+        <a href="{% url 'patient_profile' %}">Profile</a>
+        <a href="{% url 'logout' %}" class="btn-ghost">Logout</a>
+      </div>
+    </div>
+    
+
+    <section class="dashboard-grid">
+      <!-- LEFT: Profile -->
+      <aside class="card profile-card">
+        <div class="avatar"><svg viewBox="0 0 24 24"><path d="M12 12c2.8 0 5-2.2 5-5s-2.2-5-5-5-5 2.2-5 5 2.2 5 5 5zm0 2c-3.3 0-10 1.7-10 5v1h20v-1c0-3.3-6.7-5-10-5z"/></svg></div>
+        <div class="profile-name">{{ user.username }}</div>
+        <div class="profile-meta">{{ user.email }}</div>
+        
+
+        <div class="stat-row">
+          <div class="stat">{{ upcoming_appointments_count }} upcoming</div>
+          <div class="stat">{{ past_appointments_count }} past</div>
+        </div>
+
+        <div style="margin-top:14px;">
+          <a href="{% url 'book_appointment' %}" class="btn-primary" style="display:block;text-align:center;">Book Appointment</a>
+        </div>
+        <!-- ✅ Messages -->
+    {% if messages %}
+      <div class="messages">
+        {% for message in messages %}
+          <div class="alert alert-{{ message.tags }}">{{ message }}</div>
+        {% endfor %}
+      </div>
+    {% endif %}
+      </aside>
+
+
+      
+
+      <!-- CENTER: Appointments -->
+      <section class="card">
+        <div class="main-header">
+          <h2>Upcoming Appointments</h2>
+          <a href="{% url 'book_appointment' %}" class="btn-ghost">New</a>
+        </div>
+
+        <div style="overflow:auto;">
+          <table class="table">
+            <thead>
+              <tr>
+                <th>Date</th><th>Time</th><th>Doctor</th><th>Reason</th><th>Status</th><th>Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for appt in upcoming_appointments %}
+              <tr>
+                <td>{{ appt.date }}</td>
+                <td>{{ appt.time }}</td>
+                <td>{{ appt.doctor.user.username }} — {{ appt.doctor.specialization }}</td>
+                <td>{{ appt.reason }}</td>
+                <td>
+                  <span class="status-pill 
+                    {% if appt.status == 'Confirmed' %}status-confirmed
+                    {% elif appt.status == 'Pending' %}status-pending
+                    {% elif appt.status == 'Cancelled' %}status-cancelled
+                    {% endif %}">
+                    {{ appt.status }}
+                  </span>
+                </td>
+                <td>
+                  <div class="row-actions">
+                    <a class="action-btn view" href="{% url 'appointment_detail' appt.id %}">View</a>
+                    <form method="post" action="{% url 'appointment_cancel' appt.id %}" style="display:inline;">
+                      {% csrf_token %}
+                      {% comment %} <button type="submit" class="action-btn cancel">Cancel</button> {% endcomment %}
+                    </form>
+                  </div>
+                </td>
+              </tr>
+              {% empty %}
+              <tr><td colspan="6" style="text-align:center;color:var(--muted);padding:20px;">No upcoming appointments. <a href="{% url 'book_appointment' %}">Book one now</a>.</td></tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <!-- RIGHT: Doctors -->
+      <aside class="card">
+        <h3>Your Doctors</h3>
+        <ul style="list-style:none;padding:0;display:grid;gap:10px;">
+          {% for doc in doctors %}
+          <li style="display:flex;gap:10px;align-items:center;">
+            <div>
+              <div style="font-weight:700;color:#07333a;">Dr. {{ doc.user.username }}</div>
+              <div style="font-size:13px;color:var(--muted);">{{ doc.specialization }}</div>
+            </div>
+          </li>
+          {% empty %}
+          <li style="color:var(--muted);font-size:13px;">No doctors linked yet.</li>
+          {% endfor %}
+        </ul>
+      </aside>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <small>© <span id="year">2025</span> Medicare Hub — Secure medical appointments</small>
+  </footer>
+</body>
+</html>

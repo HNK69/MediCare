@@ -1,0 +1,73 @@
+<!-- File: templates/accounts/appointment_detail.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  {% load static %}
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Appointment Details — Medicare Hub</title>
+  <link rel="stylesheet" href="{% static 'css/style.css' %}">
+  <style>
+    .detail-card {
+      background: var(--card-bg);
+      padding: 20px;
+      border-radius: 12px;
+      box-shadow: var(--shadow);
+      max-width: 600px;
+      margin: 20px auto;
+    }
+    .detail-card h2 { font-size: 20px; margin-bottom: 10px; color: var(--accent-deep); }
+    .detail-card p { margin: 6px 0; font-size: 15px; color: #0b3440; }
+    .status-pill {
+      display: inline-block;
+      padding: 6px 10px;
+      border-radius: 999px;
+      font-size: 13px;
+      font-weight: 700;
+    }
+    .status-Confirmed { background: rgba(14,194,182,0.12); color: var(--accent-deep); }
+    .status-Pending { background: rgba(13,110,253,0.08); color: var(--accent-deep); }
+    .status-Cancelled { background: rgba(255,90,90,0.08); color: #b22e2e; }
+    .status-Completed { background: rgba(0,200,83,0.12); color: #057a35; }
+    .btn-group { margin-top: 20px; display: flex; gap: 12px; }
+  </style>
+</head>
+<body>
+<header class="site-header">
+  <div class="site-brand">
+    <span class="brand-name">Medicare Hub</span>
+  </div>
+</header>
+
+<main class="dashboard-wrap">
+  <div class="detail-card">
+    <h2>Appointment with Dr. {{ appointment.doctor.user.username }}</h2>
+    <p><strong>Date:</strong> {{ appointment.date }}</p>
+    <p><strong>Time:</strong> {{ appointment.time }}</p>
+    <p><strong>Doctor:</strong> Dr. {{ appointment.doctor.user.username }} ({{ appointment.doctor.specialization }})</p>
+    <p><strong>Status:</strong> 
+      <span class="status-pill status-{{ appointment.status }}">
+        {{ appointment.status }}
+      </span>
+    </p>
+    {% if appointment.reason %}
+    <p><strong>Reason for Visit:</strong> {{ appointment.reason }}</p>
+    {% endif %}
+
+    <div class="btn-group">
+      <a href="{% url 'patient_appointments' %}" class="btn-ghost">Back</a>
+      {% if appointment.status != "Cancelled" %}
+      <form method="post" action="{% url 'appointment_cancel' appointment.id %}">
+        {% csrf_token %}
+        {% comment %} <button type="submit" class="btn-secondary">Cancel Appointment</button> {% endcomment %}
+      </form>
+      {% endif %}
+    </div>
+  </div>
+</main>
+
+<footer class="site-footer">
+  <small>© 2025 Medicare Hub — Secure medical appointments</small>
+</footer>
+</body>
+</html>

@@ -1,0 +1,101 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Medicare Hub — Appointments</title>
+  <link rel="stylesheet" href="{% static 'css/style.css' %}">
+  <style>
+    .appointments-wrap {
+      max-width: var(--max-width);
+      margin: 20px auto;
+      padding: 0 18px;
+    }
+    .main-header {
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      margin-bottom:18px;
+    }
+    .main-header h1 { font-size:20px; color:var(--accent-deep); margin:0; }
+    .btn-ghost { padding:8px 12px; border-radius:8px; border:1px dashed rgba(13,110,253,0.2); background:#fff; cursor:pointer; color:var(--accent-deep); }
+    .card { background: var(--card-bg); padding: 20px; border-radius: 12px; box-shadow: var(--shadow); }
+    .table { width:100%; border-collapse:collapse; margin-top:8px; }
+    .table th, .table td { padding:12px 10px; font-size:14px; text-align:left; border-bottom:1px solid #eef6f6; }
+    .status-pill { padding:6px 10px; border-radius:999px; font-size:13px; font-weight:700; }
+    .status-confirmed { background: rgba(14,194,182,0.12); color:var(--accent-deep); }
+    .status-pending { background: rgba(13,110,253,0.08); color:var(--accent-deep); }
+    .status-cancelled { background: rgba(255,90,90,0.08); color:#b22e2e; }
+    .status-completed { background: rgba(100,200,100,0.12); color:green; }
+    .row-actions { display:flex; gap:8px; }
+    .action-btn { padding:6px 10px; border-radius:8px; font-size:13px; font-weight:600; cursor:pointer; border:none; }
+    .action-btn.view { background:#f8fbff; border:1px solid rgba(13,110,253,0.2); color:var(--accent-deep); }
+    .action-btn.confirm { background:#e8fdf5; border:1px solid rgba(14,194,182,0.2); color:green; }
+    .action-btn.complete { background:#fff9e6; border:1px solid rgba(255,200,50,0.2); color:#b27d00; }
+    .action-btn.cancel { background:#fff5f5; border:1px solid rgba(178,46,46,0.2); color:#b22e2e; }
+  </style>
+</head>
+<body>
+  <header class="site-header">
+    <div class="site-brand">
+      <span class="brand-name">Medicare Hub</span>
+    </div>
+  </header>
+
+  <main class="appointments-wrap">
+    <div class="main-header">
+      <h1>All Appointments</h1>
+      <a href="{% url 'doctor_dashboard' %}" class="btn-ghost">← Back to Dashboard</a>
+    </div>
+
+    <section class="card">
+      <table class="table">
+        <thead>
+          <tr>
+            <th>Patient</th>
+            <th>Date</th>
+            <th>Time</th>
+            <th>Status</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for appt in appointments %}
+          <tr>
+            <td>{{ appt.patient.user.username }}</td>
+            <td>{{ appt.date }}</td>
+            <td>{{ appt.time }}</td>
+            <td>
+              <span class="status-pill
+                {% if appt.status == 'Confirmed' %}status-confirmed
+                {% elif appt.status == 'Pending' %}status-pending
+                {% elif appt.status == 'Cancelled' %}status-cancelled
+                {% elif appt.status == 'Completed' %}status-completed
+                {% endif %}">
+                {{ appt.status }}
+              </span>
+            </td>
+            <td class="row-actions">
+              <a href="{% url 'doctor_patient_appointment_detail' appt.id %}" class="action-btn view">View</a>
+
+             
+            </td>
+          </tr>
+          {% empty %}
+          <tr>
+            <td colspan="5" style="text-align:center;color:var(--muted);padding:20px;">
+              No appointments found.
+            </td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <small>© 2025 Medicare Hub — Secure medical appointments</small>
+  </footer>
+</body>
+</html>
